@@ -15,9 +15,11 @@ button{width:100%;padding:14px;margin-top:12px;font-size:17px;border:none;border
 .orange{background:#ff7a00;}
 .hidden{display:none;}
 .back{background:#999;}
+.language-btn{margin:0 4px; padding:6px 12px; font-size:14px;}
 </style>
 </head>
 <body>
+
 <div class="container">
 
 <!-- LOGIN -->
@@ -32,46 +34,55 @@ button{width:100%;padding:14px;margin-top:12px;font-size:17px;border:none;border
 <!-- DASHBOARD -->
 <div id="dashboard" class="card hidden">
   <h1>Dashboard</h1>
-  <button class="orange" onclick="showStockIn()">📦 Stock In</button>
-  <button class="orange" onclick="showStockOut()">🚚 Stock Out</button>
-  <button class="orange" onclick="showScan()">🔍 Scan Barcode</button>
-  <button class="orange">📊 Reports</button>
+
+  <!-- LANGUAGE BUTTONS -->
+  <div style="text-align:center; margin:10px 0;">
+    <button class="language-btn" onclick="setLang('en')">EN</button>
+    <button class="language-btn" onclick="setLang('am')">አማ</button>
+    <button class="language-btn" onclick="setLang('or')">OR</button>
+  </div>
+
+  <button class="orange" id="btnStockIn" onclick="showStockIn()">📦 Stock In</button>
+  <button class="orange" id="btnStockOut" onclick="showStockOut()">🚚 Stock Out</button>
+  <button class="orange" id="btnScan" onclick="showScan()">🔍 Scan Barcode</button>
+  <button class="orange" id="btnReports">📊 Reports</button>
 </div>
 
 <!-- STOCK IN -->
 <div id="stockin" class="card hidden">
   <h1>Stock In</h1>
-  <input placeholder="Scan / Enter Barcode" />
-  <input placeholder="Part Name" />
-  <input type="number" placeholder="Quantity" />
-  <input placeholder="Supplier" />
-  <button class="orange">SAVE IN</button>
+  <input id="stockInBarcode" placeholder="Scan / Enter Barcode" />
+  <input id="stockInPart" placeholder="Part Name" />
+  <input type="number" id="stockInQty" placeholder="Quantity" />
+  <input id="stockInSupplier" placeholder="Supplier" />
+  <button class="orange" id="btnSaveIn">SAVE IN</button>
   <button class="back" onclick="showDashboard()">⬅ Back</button>
 </div>
 
 <!-- STOCK OUT -->
 <div id="stockout" class="card hidden">
   <h1>Stock Out</h1>
-  <input placeholder="Scan / Enter Barcode" />
-  <input placeholder="Part Name" />
-  <input type="number" placeholder="Quantity" />
-  <input placeholder="Destination / Customer" />
-  <button class="orange">CONFIRM OUT</button>
+  <input id="stockOutBarcode" placeholder="Scan / Enter Barcode" />
+  <input id="stockOutPart" placeholder="Part Name" />
+  <input type="number" id="stockOutQty" placeholder="Quantity" />
+  <input id="stockOutDest" placeholder="Destination / Customer" />
+  <button class="orange" id="btnConfirmOut">CONFIRM OUT</button>
   <button class="back" onclick="showDashboard()">⬅ Back</button>
 </div>
 
 <!-- SCAN BARCODE -->
 <div id="scan" class="card hidden">
   <h1>Scan Barcode</h1>
-  <input placeholder="Scan or Enter Barcode" />
-  <input placeholder="Part Name (auto)" />
-  <button class="orange">SAVE</button>
+  <input id="scanBarcode" placeholder="Scan or Enter Barcode" />
+  <input id="scanPart" placeholder="Part Name (auto)" />
+  <button class="orange" id="btnSaveScan">SAVE</button>
   <button class="back" onclick="showDashboard()">⬅ Back</button>
 </div>
 
 </div>
 
 <script>
+// HIDE / SHOW SCREENS
 function hideAll(){
   document.getElementById("login").classList.add("hidden");
   document.getElementById("dashboard").classList.add("hidden");
@@ -83,8 +94,112 @@ function showDashboard(){hideAll(); document.getElementById("dashboard").classLi
 function showStockIn(){hideAll(); document.getElementById("stockin").classList.remove("hidden");}
 function showStockOut(){hideAll(); document.getElementById("stockout").classList.remove("hidden");}
 function showScan(){hideAll(); document.getElementById("scan").classList.remove("hidden");}
+
+// MULTILINGUAL SUPPORT
+const labels = {
+  en: {
+    login: "Warehouse Login",
+    dashboard: "Dashboard",
+    stockIn: "Stock In",
+    stockOut: "Stock Out",
+    scan: "Scan Barcode",
+    saveIn: "SAVE IN",
+    confirmOut: "CONFIRM OUT",
+    save: "SAVE",
+    back: "⬅ Back",
+    stockInBarcode: "Scan / Enter Barcode",
+    stockInPart: "Part Name",
+    stockInQty: "Quantity",
+    stockInSupplier: "Supplier",
+    stockOutBarcode: "Scan / Enter Barcode",
+    stockOutPart: "Part Name",
+    stockOutQty: "Quantity",
+    stockOutDest: "Destination / Customer",
+    scanBarcode: "Scan or Enter Barcode",
+    scanPart: "Part Name (auto)"
+  },
+  am: {
+    login: "የእቃ ማዕከል ግባ",
+    dashboard: "ዳሽቦርድ",
+    stockIn: "ግቢ እቃ",
+    stockOut: "ውጪ እቃ",
+    scan: "ባርኮድ ስካን",
+    saveIn: "አስቀምጥ",
+    confirmOut: "አረጋግጥ",
+    save: "አስቀምጥ",
+    back: "⬅ ወደ ኋላ",
+    stockInBarcode: "ባርኮድ አስገባ / ስካን",
+    stockInPart: "የእቃ ስም",
+    stockInQty: "ብዛት",
+    stockInSupplier: "አቅራቢ",
+    stockOutBarcode: "ባርኮድ አስገባ / ስካን",
+    stockOutPart: "የእቃ ስም",
+    stockOutQty: "ብዛት",
+    stockOutDest: "መድረሻ / ደንበኛ",
+    scanBarcode: "ባርኮድ ስካን ወይም አስገባ",
+    scanPart: "የእቃ ስም (ራስሰር)"
+  },
+  or: {
+    login: "Kuusaa Meeshaalee Seensa",
+    dashboard: "Daashboordii",
+    stockIn: "Seensa Meeshaa",
+    stockOut: "Baasii Meeshaa",
+    scan: "Baarkoodii Skaanii",
+    saveIn: "Kuusaa",
+    confirmOut: "Mirkaani",
+    save: "Kuusaa",
+    back: "⬅ Gara Duraa",
+    stockInBarcode: "Baarkoodii galchi / Skaanii",
+    stockInPart: "Maqaa Meeshaa",
+    stockInQty: "Baay'ina",
+    stockInSupplier: "Kenniinsa",
+    stockOutBarcode: "Baarkoodii galchi / Skaanii",
+    stockOutPart: "Maqaa Meeshaa",
+    stockOutQty: "Baay'ina",
+    stockOutDest: "Iddoo / Kliyaanti",
+    scanBarcode: "Baarkoodii Skaanii yookiin galchi",
+    scanPart: "Maqaa Meeshaa (auto)"
+  }
+};
+
+function setLang(lang){
+  // LOGIN
+  document.querySelector("#login h1").innerText = labels[lang].login;
+
+  // DASHBOARD
+  document.querySelector("#dashboard h1").innerText = labels[lang].dashboard;
+  document.querySelector("#btnStockIn").innerText = labels[lang].stockIn;
+  document.querySelector("#btnStockOut").innerText = labels[lang].stockOut;
+  document.querySelector("#btnScan").innerText = labels[lang].scan;
+
+  // STOCK IN
+  document.querySelector("#stockin h1").innerText = labels[lang].stockIn;
+  document.querySelector("#stockin button.orange").innerText = labels[lang].saveIn;
+  document.querySelector("#stockin button.back").innerText = labels[lang].back;
+  document.querySelector("#stockInBarcode").placeholder = labels[lang].stockInBarcode;
+  document.querySelector("#stockInPart").placeholder = labels[lang].stockInPart;
+  document.querySelector("#stockInQty").placeholder = labels[lang].stockInQty;
+  document.querySelector("#stockInSupplier").placeholder = labels[lang].stockInSupplier;
+
+  // STOCK OUT
+  document.querySelector("#stockout h1").innerText = labels[lang].stockOut;
+  document.querySelector("#stockout button.orange").innerText = labels[lang].confirmOut;
+  document.querySelector("#stockout button.back").innerText = labels[lang].back;
+  document.querySelector("#stockOutBarcode").placeholder = labels[lang].stockOutBarcode;
+  document.querySelector("#stockOutPart").placeholder = labels[lang].stockOutPart;
+  document.querySelector("#stockOutQty").placeholder = labels[lang].stockOutQty;
+  document.querySelector("#stockOutDest").placeholder = labels[lang].stockOutDest;
+
+  // SCAN BARCODE
+  document.querySelector("#scan h1").innerText = labels[lang].scan;
+  document.querySelector("#scan button.orange").innerText = labels[lang].save;
+  document.querySelector("#scan button.back").innerText = labels[lang].back;
+  document.querySelector("#scanBarcode").placeholder = labels[lang].scanBarcode;
+  document.querySelector("#scanPart").placeholder = labels[lang].scanPart;
+}
 </script>
 </body>
 </html>
+
 
 
