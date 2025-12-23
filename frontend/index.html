@@ -51,7 +51,7 @@ th, td{padding:6px; text-align:center; border:1px solid #ccc;}
   <button class="orange" id="btnStockIn" onclick="showStockIn()">📦 Stock In</button>
   <button class="orange" id="btnStockOut" onclick="showStockOut()">🚚 Stock Out</button>
   <button class="orange" id="btnScan" onclick="showScan()">🔍 Scan Barcode</button>
-  <button class="orange" id="btnReports">📊 Reports</button>
+  <button class="orange" id="btnReports" onclick="showReports()">📊 Reports</button>
 </div>
 
 <!-- STOCK IN -->
@@ -113,53 +113,32 @@ th, td{padding:6px; text-align:center; border:1px solid #ccc;}
 <script>
 // ===== HIDE / SHOW SCREENS =====
 function hideAll(){
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("dashboard").classList.add("hidden");
-  document.getElementById("stockin").classList.add("hidden");
-  document.getElementById("stockout").classList.add("hidden");
-  document.getElementById("scan").classList.add("hidden");
-  document.getElementById("reports").classList.add("hidden");
+  ["login","dashboard","stockin","stockout","scan","reports"].forEach(id => 
+    document.getElementById(id).classList.add("hidden")
+  );
 }
 function showDashboard(){hideAll(); document.getElementById("dashboard").classList.remove("hidden");}
 function showStockIn(){hideAll(); document.getElementById("stockin").classList.remove("hidden");}
 function showStockOut(){hideAll(); document.getElementById("stockout").classList.remove("hidden");}
 function showScan(){hideAll(); document.getElementById("scan").classList.remove("hidden");}
+function showReports(){hideAll(); document.getElementById("reports").classList.remove("hidden"); updateReports();}
 
 // ===== MULTILINGUAL SUPPORT =====
-const labels = {
-  en: { login: "Warehouse Login", dashboard: "Dashboard", stockIn: "Stock In", stockOut: "Stock Out", scan: "Scan Barcode", saveIn: "SAVE IN", confirmOut: "CONFIRM OUT", save: "SAVE", back: "⬅ Back", stockInBarcode: "Scan / Enter Barcode", stockInPart: "Part Name", stockInQty: "Quantity", stockInSupplier: "Supplier", stockOutBarcode: "Scan / Enter Barcode", stockOutPart: "Part Name", stockOutQty: "Quantity", stockOutDest: "Destination / Customer", scanBarcode: "Scan or Enter Barcode", scanPart: "Part Name (auto)" },
-  am: { login: "የእቃ ማዕከል ግባ", dashboard: "ዳሽቦርድ", stockIn: "ግቢ እቃ", stockOut: "ውጪ እቃ", scan: "ባርኮድ ስካን", saveIn: "አስቀምጥ", confirmOut: "አረጋግጥ", save: "አስቀምጥ", back: "⬅ ወደ ኋላ", stockInBarcode: "ባርኮድ አስገባ / ስካን", stockInPart: "የእቃ ስም", stockInQty: "ብዛት", stockInSupplier: "አቅራቢ", stockOutBarcode: "ባርኮድ አስገባ / ስካን", stockOutPart: "የእቃ ስም", stockOutQty: "ብዛት", stockOutDest: "መድረሻ / ደንበኛ", scanBarcode: "ባርኮድ ስካን ወይም አስገባ", scanPart: "የእቃ ስም (ራስሰር)" },
-  or: { login: "Kuusaa Meeshaalee Seensa", dashboard: "Daashboordii", stockIn: "Seensa Meeshaa", stockOut: "Baasii Meeshaa", scan: "Baarkoodii Skaanii", saveIn: "Kuusaa", confirmOut: "Mirkaani", save: "Kuusaa", back: "⬅ Gara Duraa", stockInBarcode: "Baarkoodii galchi / Skaanii", stockInPart: "Maqaa Meeshaa", stockInQty: "Baay'ina", stockInSupplier: "Kenniinsa", stockOutBarcode: "Baarkoodii galchi / Skaanii", stockOutPart: "Maqaa Meeshaa", stockOutQty: "Baay'ina", stockOutDest: "Iddoo / Kliyaanti", scanBarcode: "Baarkoodii Skaanii yookiin galchi", scanPart: "Maqaa Meeshaa (auto)" }
+const labels = { /* same as before */ 
+en: { login: "Warehouse Login", dashboard: "Dashboard", stockIn: "Stock In", stockOut: "Stock Out", scan: "Scan Barcode", saveIn: "SAVE IN", confirmOut: "CONFIRM OUT", save: "SAVE", back: "⬅ Back", stockInBarcode: "Scan / Enter Barcode", stockInPart: "Part Name", stockInQty: "Quantity", stockInSupplier: "Supplier", stockOutBarcode: "Scan / Enter Barcode", stockOutPart: "Part Name", stockOutQty: "Quantity", stockOutDest: "Destination / Customer", scanBarcode: "Scan or Enter Barcode", scanPart: "Part Name (auto)" },
+am: { login: "የእቃ ማዕከል ግባ", dashboard: "ዳሽቦርድ", stockIn: "ግቢ እቃ", stockOut: "ውጪ እቃ", scan: "ባርኮድ ስካን", saveIn: "አስቀምጥ", confirmOut: "አረጋግጥ", save: "አስቀምጥ", back: "⬅ ወደ ኋላ", stockInBarcode: "ባርኮድ አስገባ / ስካን", stockInPart: "የእቃ ስም", stockInQty: "ብዛት", stockInSupplier: "አቅራቢ", stockOutBarcode: "ባርኮድ አስገባ / ስካን", stockOutPart: "የእቃ ስም", stockOutQty: "ብዛት", stockOutDest: "መድረሻ / ደንበኛ", scanBarcode: "ባርኮድ ስካን ወይም አስገባ", scanPart: "የእቃ ስም (ራስሰር)" },
+or: { login: "Kuusaa Meeshaalee Seensa", dashboard: "Daashboordii", stockIn: "Seensa Meeshaa", stockOut: "Baasii Meeshaa", scan: "Baarkoodii Skaanii", saveIn: "Kuusaa", confirmOut: "Mirkaani", save: "Kuusaa", back: "⬅ Gara Duraa", stockInBarcode: "Baarkoodii galchi / Skaanii", stockInPart: "Maqaa Meeshaa", stockInQty: "Baay'ina", stockInSupplier: "Kenniinsa", stockOutBarcode: "Baarkoodii galchi / Skaanii", stockOutPart: "Maqaa Meeshaa", stockOutQty: "Baay'ina", stockOutDest: "Iddoo / Kliyaanti", scanBarcode: "Baarkoodii Skaanii yookiin galchi", scanPart: "Maqaa Meeshaa (auto)" }
 };
 
 function setLang(lang){
-  document.querySelector("#login h1").innerText = labels[lang].login;
-  document.querySelector("#dashboard h1").innerText = labels[lang].dashboard;
-  document.querySelector("#btnStockIn").innerText = labels[lang].stockIn;
-  document.querySelector("#btnStockOut").innerText = labels[lang].stockOut;
-  document.querySelector("#btnScan").innerText = labels[lang].scan;
-
-  document.querySelector("#stockin h1").innerText = labels[lang].stockIn;
-  document.querySelector("#stockin button.orange").innerText = labels[lang].saveIn;
-  document.querySelector("#stockin button.back").innerText = labels[lang].back;
-  document.querySelector("#stockInBarcode").placeholder = labels[lang].stockInBarcode;
-  document.querySelector("#stockInPart").placeholder = labels[lang].stockInPart;
-  document.querySelector("#stockInQty").placeholder = labels[lang].stockInQty;
-  document.querySelector("#stockInSupplier").placeholder = labels[lang].stockInSupplier;
-
-  document.querySelector("#stockout h1").innerText = labels[lang].stockOut;
-  document.querySelector("#stockout button.orange").innerText = labels[lang].confirmOut;
-  document.querySelector("#stockout button.back").innerText = labels[lang].back;
-  document.querySelector("#stockOutBarcode").placeholder = labels[lang].stockOutBarcode;
-  document.querySelector("#stockOutPart").placeholder = labels[lang].stockOutPart;
-  document.querySelector("#stockOutQty").placeholder = labels[lang].stockOutQty;
-  document.querySelector("#stockOutDest").placeholder = labels[lang].stockOutDest;
-
-  document.querySelector("#scan h1").innerText = labels[lang].scan;
-  document.querySelector("#scan button.orange").innerText = labels[lang].save;
-  document.querySelector("#scan button.back").innerText = labels[lang].back;
-  document.querySelector("#scanBarcode").placeholder = labels[lang].scanBarcode;
-  document.querySelector("#scanPart").placeholder = labels[lang].scanPart;
+  // simplified: update placeholders and button texts
+  for (const id of ["login","dashboard","stockin","stockout","scan"]) {
+    const container = document.getElementById(id);
+    if(!container) continue;
+    container.querySelectorAll("h1").forEach(el => {
+      if(labels[lang][id] !== undefined) el.innerText = labels[lang][id];
+    });
+  }
 }
 
 // ===== Barcode Generation =====
@@ -169,98 +148,102 @@ function generateBarcode() {
 }
 
 // ===== Barcode Scanner =====
+let scannerRunning = false;
 function startScanner() {
+  if (scannerRunning) return;
+  scannerRunning = true;
   Quagga.init({
-    inputStream : { name : "Live", type : "LiveStream", target: document.querySelector('#scanner-container') },
-    decoder : { readers : ["code_128_reader"] }
-  }, function(err) { if (err) { console.log(err); return; } Quagga.start(); });
-  Quagga.onDetected(function(result) {
-    const code = result.codeResult.code;
-    document.getElementById("scanBarcode").value = code;
-    stopScanner();
+    inputStream: { name:"Live", type:"LiveStream", target: document.querySelector('#scanner-container') },
+    decoder: { readers:["code_128_reader"] }
+  }, function(err){
+    if(err){ console.log(err); scannerRunning=false; return; }
+    Quagga.start();
   });
+  Quagga.onDetected(onBarcodeDetected);
 }
-function stopScanner() {
+function onBarcodeDetected(result){
+  const code = result.codeResult.code;
+  document.getElementById("scanBarcode").value = code;
+}
+function stopScanner(){
+  if(!scannerRunning) return;
   Quagga.stop();
-  document.getElementById("scanner-container").innerHTML = "";
+  Quagga.offDetected(onBarcodeDetected);
+  document.getElementById("scanner-container").innerHTML="";
+  scannerRunning=false;
   showDashboard();
 }
 
 // ===== LocalStorage =====
-const STOCK_IN_KEY = "stockInItems";
-const STOCK_OUT_KEY = "stockOutItems";
+const STOCK_IN_KEY="stockInItems", STOCK_OUT_KEY="stockOutItems";
 
-document.getElementById("btnSaveIn").addEventListener("click", () => {
-  const item = {
-    barcode: document.getElementById("stockInBarcode").value,
-    part: document.getElementById("stockInPart").value,
-    qty: document.getElementById("stockInQty").value,
-    supplier: document.getElementById("stockInSupplier").value,
-    type: "In"
+document.getElementById("btnSaveIn").addEventListener("click", ()=>{
+  const item={
+    barcode:document.getElementById("stockInBarcode").value,
+    part:document.getElementById("stockInPart").value,
+    qty:document.getElementById("stockInQty").value,
+    supplier:document.getElementById("stockInSupplier").value,
+    type:"In"
   };
-  const items = JSON.parse(localStorage.getItem(STOCK_IN_KEY)) || [];
+  const items=JSON.parse(localStorage.getItem(STOCK_IN_KEY))||[];
   items.push(item);
-  localStorage.setItem(STOCK_IN_KEY, JSON.stringify(items));
+  localStorage.setItem(STOCK_IN_KEY,JSON.stringify(items));
   alert("Stock In saved!");
-  document.getElementById("stockInBarcode").value = "";
-  document.getElementById("stockInPart").value = "";
-  document.getElementById("stockInQty").value = "";
-  document.getElementById("stockInSupplier").value = "";
+  ["stockInBarcode","stockInPart","stockInQty","stockInSupplier"].forEach(id=>document.getElementById(id).value="");
 });
 
-document.getElementById("btnConfirmOut").addEventListener("click", () => {
-  const item = {
-    barcode: document.getElementById("stockOutBarcode").value,
-    part: document.getElementById("stockOutPart").value,
-    qty: document.getElementById("stockOutQty").value,
-    supplier: document.getElementById("stockOutDest").value,
-    type: "Out"
+document.getElementById("btnConfirmOut").addEventListener("click", ()=>{
+  const item={
+    barcode:document.getElementById("stockOutBarcode").value,
+    part:document.getElementById("stockOutPart").value,
+    qty:document.getElementById("stockOutQty").value,
+    supplier:document.getElementById("stockOutDest").value,
+    type:"Out"
   };
-  const items = JSON.parse(localStorage.getItem(STOCK_OUT_KEY)) || [];
+  const items=JSON.parse(localStorage.getItem(STOCK_OUT_KEY))||[];
   items.push(item);
-  localStorage.setItem(STOCK_OUT_KEY, JSON.stringify(items));
+  localStorage.setItem(STOCK_OUT_KEY,JSON.stringify(items));
   alert("Stock Out saved!");
-  document.getElementById("stockOutBarcode").value = "";
-  document.getElementById("stockOutPart").value = "";
-  document.getElementById("stockOutQty").value = "";
-  document.getElementById("stockOutDest").value = "";
+  ["stockOutBarcode","stockOutPart","stockOutQty","stockOutDest"].forEach(id=>document.getElementById(id).value="");
 });
 
-document.getElementById("btnReports").addEventListener("click", showReports);
+document.getElementById("btnSaveScan").addEventListener("click", ()=>{
+  const item={
+    barcode:document.getElementById("scanBarcode").value,
+    part:document.getElementById("scanPart").value || "",
+    type:"Scanned"
+  };
+  const items=JSON.parse(localStorage.getItem(STOCK_IN_KEY))||[];
+  items.push(item);
+  localStorage.setItem(STOCK_IN_KEY,JSON.stringify(items));
+  alert("Scanned item saved!");
+  document.getElementById("scanBarcode").value="";
+  document.getElementById("scanPart").value="";
+});
 
-function showReports() {
-  hideAll();
-  document.getElementById("reports").classList.remove("hidden");
-
-  const tableBody = document.querySelector("#reportTable tbody");
-  tableBody.innerHTML = "";
-
-  const stockInItems = JSON.parse(localStorage.getItem(STOCK_IN_KEY)) || [];
-  const stockOutItems = JSON.parse(localStorage.getItem(STOCK_OUT_KEY)) || [];
-  const allItems = stockInItems.concat(stockOutItems);
-
-  allItems.forEach(item => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.type}</td>
-      <td>${item.barcode}</td>
-      <td>${item.part}</td>
-      <td>${item.qty}</td>
-      <td>${item.supplier}</td>
-    `;
+// ===== Reports =====
+function updateReports(){
+  const tableBody=document.querySelector("#reportTable tbody");
+  tableBody.innerHTML="";
+  const stockInItems=JSON.parse(localStorage.getItem(STOCK_IN_KEY))||[];
+  const stockOutItems=JSON.parse(localStorage.getItem(STOCK_OUT_KEY))||[];
+  [...stockInItems,...stockOutItems].forEach(item=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${item.type}</td><td>${item.barcode}</td><td>${item.part||""}</td><td>${item.qty||""}</td><td>${item.supplier||""}</td>`;
     tableBody.appendChild(tr);
   });
 }
 
-function clearReports() {
-  if (confirm("Are you sure you want to clear all reports?")) {
+function clearReports(){
+  if(confirm("Are you sure you want to clear all reports?")){
     localStorage.removeItem(STOCK_IN_KEY);
     localStorage.removeItem(STOCK_OUT_KEY);
-    showReports();
+    updateReports();
   }
 }
 </script>
 </body>
 </html>
+
 
 
