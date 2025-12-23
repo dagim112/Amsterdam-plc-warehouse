@@ -1,94 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Amsterdam PLC Warehouse</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f2f4f7;
-    }
-    .container {
-      max-width: 420px;
-      margin: auto;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #1f3a5f;
-    }
-    .logo {
-      text-align: center;
-      font-size: 26px;
-      font-weight: bold;
-      color: #ff7a00;
-    }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 15px;
-      background: #1f3a5f;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 18px;
-    }
-    .dashboard button {
-      background: #ff7a00;
-      margin-top: 10px;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Amsterdam PLC Warehouse</title>
 
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f2f4f7;
+  margin: 0;
+}
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 20px;
+}
+.logo {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #ff7a00;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+h1 {
+  text-align: center;
+  color: #1f3a5f;
+}
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  font-size: 17px;
+  border: none;
+  border-radius: 6px;
+  background: #1f3a5f;
+  color: white;
+}
+.orange {
+  background: #ff7a00;
+}
+.hidden {
+  display: none;
+}
+.back {
+  background: #999;
+}
+</style>
+</head>
+
+<body>
 <div class="container">
 
-  <!-- LOGIN -->
-  <div id="login" class="card">
-    <div class="logo">Amsterdam PLC</div>
-    <h1>Warehouse Login</h1>
-    <input type="text" placeholder="Username" />
-    <input type="password" placeholder="Password" />
-    <button onclick="login()">LOGIN</button>
-  </div>
+<!-- LOGIN -->
+<div id="login" class="card">
+  <div class="logo">Amsterdam PLC</div>
+  <h1>Warehouse Login</h1>
+  <input placeholder="Username" />
+  <input type="password" placeholder="Password" />
+  <button onclick="showDashboard()">LOGIN</button>
+</div>
 
-  <!-- DASHBOARD -->
-  <div id="dashboard" class="card hidden dashboard">
-    <h1>Dashboard</h1>
-    <button>📦 Stock In</button>
-    <button>🚚 Stock Out</button>
-    <button>🔍 Scan Barcode</button>
-    <button>📊 Reports</button>
-  </div>
+<!-- DASHBOARD -->
+<div id="dashboard" class="card hidden">
+  <h1>Dashboard</h1>
+  <button class="orange" onclick="showStockIn()">📦 Stock In</button>
+  <button class="orange">🚚 Stock Out</button>
+  <button class="orange">🔍 Scan Barcode</button>
+  <button class="orange">📊 Reports</button>
+</div>
+
+<!-- STOCK IN -->
+<div id="stockin" class="card hidden">
+  <h1>Stock In</h1>
+  <input placeholder="Scan / Enter Barcode" />
+  <input placeholder="Part Name" />
+  <input type="number" placeholder="Quantity" />
+  <input placeholder="Supplier" />
+  <button class="orange">SAVE IN</button>
+  <button class="back" onclick="showDashboard()">⬅ Back</button>
+</div>
 
 </div>
 
 <script>
-  function login() {
-    document.getElementById("login").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
-  }
+function showDashboard() {
+  hideAll();
+  document.getElementById("dashboard").classList.remove("hidden");
+}
+function showStockIn() {
+  hideAll();
+  document.getElementById("stockin").classList.remove("hidden");
+}
+function hideAll() {
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("stockin").classList.add("hidden");
+}
 </script>
 
 </body>
 </html>
+
